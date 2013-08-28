@@ -1,0 +1,19 @@
+Details:
+
+  name: REST-like API server for Lindat Services 
+  documentation: https://redmine.ms.mff.cuni.cz/projects/lindat-services
+  maintainers: Jozef M., Loganathan
+
+Description:
+
+Server is implemented in python over Cherrypy framework using plugin based applications inside the applications directory.
+
+How to start:
+  
+  1) move project_settings.py.example to project_settings.py
+  
+  2) ensure python & others is installed
+  
+    > python main.py --version
+    
+  3) run it as deamon, se example scripts in `scripts` directory 
