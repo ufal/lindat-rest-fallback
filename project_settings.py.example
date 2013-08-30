@@ -1,0 +1,10 @@
+# coding=utf-8
+# See main file for licence
+
+"""
+  Project specific settings overriding the default ones in `settings` directory.
+"""
+
+settings = {
+
+}
