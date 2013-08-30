@@ -21,7 +21,11 @@ export PATH="/sbin:$PATH"
 NAME=pyrest
 
 # Daemon name and its arguments
-RESTDIR=/home/ramasamy/lindat/services/pyrest/
+
+# The RESTDIR variable must point to the 
+# absolute path where the repository is cloned
+RESTDIR=/home/ramasamy/lindat/lindat-services/
+
 DAEMON=/usr/bin/python
 DAEMON_ARGS=$RESTDIR/main.py
 
