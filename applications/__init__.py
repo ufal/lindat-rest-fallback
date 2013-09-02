@@ -5,7 +5,8 @@
 import os
 import server
 import cherrypy
-
+import logging
+_logger = logging.getLogger("applications")
 
 # noinspection PyMissingConstructor,PyDocstring
 class _plugin_meta(type):
@@ -77,6 +78,9 @@ class plugin:
         """ Should be overloaded. """
         raise NotImplementedError( "Implement this in your application" )
 
+    def log(self, msg, *args):
+        """ Log msg """
+        _logger.info( msg, *args ) 
 
 # automatic loading
 #

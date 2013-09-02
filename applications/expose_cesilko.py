@@ -41,7 +41,9 @@ class cesilko(plugin):
                 fout.write( utils.uni(text).encode("utf-8") )
 
             cmd = "%s %s" % (cesilko.tr_script, input_f.name)
+            self.log( "Cesilko ran: [%s]", cmd )
             retcode, stdout, stderr = utils.run( cmd )
+            output_exists = os.path.exists(expected_output_file_name)
             if 0 == retcode and os.path.exists(expected_output_file_name):
                 with codecs.open(expected_output_file_name, 'rb', 'iso-8859-1') as fin:
                     translated_text = fin.read()
@@ -50,7 +52,7 @@ class cesilko(plugin):
                         "result": translated_text
                     }
             else:
-                return self._failed( detail="retcode:%d" % retcode )
+                return self._failed( detail="retcode:%d, exists(%s)=%s, stdout=%s, stderr=%s, cmd=%s" % (retcode,  expected_output_file_name, output_exists, stdout, stderr, cmd) )
 
         except Exception, e:
             return self._failed( detail=utils.uni(e) )
