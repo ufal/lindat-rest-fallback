@@ -34,13 +34,14 @@ class cesilko(plugin):
             return self._failed( detail="missing data parameter" )
 
         try:
-            input_f = self._get_temp_file()
+            (input_f, input_fname_rel) = self._get_temp_file()
             expected_output_file_name = input_f.name + ".SK.out"
             text = kwargs[cesilko.api_key_data]
             with input_f as fout:
                 fout.write( utils.uni(text).encode("utf-8") )
+                print 'Written input data to file ' + fout.name 
 
-            cmd = "%s %s" % (cesilko.tr_script, input_f.name)
+            cmd = "%s %s" % (cesilko.tr_script, input_fname_rel)
             self.log( "Cesilko ran: [%s]", cmd )
             retcode, stdout, stderr = utils.run( cmd )
             output_exists = os.path.exists(expected_output_file_name)
@@ -65,8 +66,12 @@ class cesilko(plugin):
             Get temp file.
         """
         import tempfile
-        return tempfile.NamedTemporaryFile(
-            suffix=".cesilko.input", dir=cesilko.temp_dir)
+        tempfile_fid = tempfile.NamedTemporaryFile(
+            suffix=".cesilko.input", dir=cesilko.temp_dir, delete=False)
+        tempfile_abs_path = tempfile_fid.name
+        dir_file = os.path.split(tempfile_abs_path)
+        fname = dir_file[1]
+        return (tempfile_fid, fname)
 
     def _failed(self, **kwargs):
         """
