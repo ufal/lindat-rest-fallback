@@ -32,7 +32,6 @@ class cesilko(plugin):
             return self._failed( detail="Invalid API - no method with such a name" )
         if 0 == len(kwargs.get(cesilko.api_key_data, "")):
             return self._failed( detail="missing data parameter" )
-
         try:
             (input_f, input_fname_rel) = self._get_temp_file()
             expected_output_file_name = input_f.name + ".SK.out"
