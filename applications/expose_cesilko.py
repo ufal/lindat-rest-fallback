@@ -32,10 +32,19 @@ class cesilko(plugin):
             return self._failed( detail="Invalid API - no method with such a name" )
         if 0 == len(kwargs.get(cesilko.api_key_data, "")):
             return self._failed( detail="missing data parameter" )
+
+        text = kwargs[cesilko.api_key_data]
+
+        if text:
+            print 'Input text is not empty'
+        else:
+            print 'Null input string'
+
         try:
             (input_f, input_fname_rel) = self._get_temp_file()
             expected_output_file_name = input_f.name + ".SK.out"
-            text = kwargs[cesilko.api_key_data]
+            #text = kwargs[cesilko.api_key_data]
+
             with input_f as fout:
                 fout.write( utils.uni(text).encode("utf-8") )
                 print 'Written input data to file ' + fout.name 
