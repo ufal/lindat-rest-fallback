@@ -39,7 +39,7 @@ class cesilko(plugin):
             text = kwargs[cesilko.api_key_data]
 
             with input_f as fout:
-                fout.write( text.decode('utf-8').encode('iso-8859-2') )
+                fout.write( text.decode('utf-8') )
                 print 'Written input data to file ' + fout.name 
 
             cmd = "%s %s" % (cesilko.tr_script, input_fname_rel)
