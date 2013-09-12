@@ -39,7 +39,7 @@ class cesilko(plugin):
             text = kwargs[cesilko.api_key_data]
 
             with input_f as fout:
-                fout.write( text )
+                fout.write( text.decode('utf-8').encode('iso-8859-1') )
                 print 'Written input data to file ' + fout.name 
 
             cmd = "%s %s" % (cesilko.tr_script, input_fname_rel)
@@ -50,7 +50,6 @@ class cesilko(plugin):
                 with codecs.open(expected_output_file_name, 'rb', 'iso-8859-1') as fin:
                     translated_text = fin.read()
                     translated_text_uni = translated_text.encode('iso-8859-1').decode('utf-8')
-                    print translated_text_uni + '\n'
                     return {
                         "input": text,
                         "result": translated_text_uni
@@ -70,7 +69,7 @@ class cesilko(plugin):
         """
         import tempfile
         tempfile_fid = tempfile.NamedTemporaryFile(
-            suffix=".cesilko.input", dir=cesilko.temp_dir, delete=False,  encoding='utf-8')
+            suffix=".cesilko.input", dir=cesilko.temp_dir, delete=False,  encoding='iso-8859-1')
         tempfile_abs_path = tempfile_fid.name
         dir_file = os.path.split(tempfile_abs_path)
         fname = dir_file[1]
