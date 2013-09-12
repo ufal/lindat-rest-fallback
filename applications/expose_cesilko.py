@@ -47,9 +47,9 @@ class cesilko(plugin):
             retcode, stdout, stderr = utils.run( cmd )
             output_exists = os.path.exists(expected_output_file_name)
             if 0 == retcode and os.path.exists(expected_output_file_name):
-                with codecs.open(expected_output_file_name, 'rb', 'iso-8859-2') as fin:
+                with codecs.open(expected_output_file_name, 'rb', 'iso-8859-15') as fin:
                     translated_text = fin.read()
-                    translated_text_uni = translated_text.encode('iso-8859-2').decode('utf-8')
+                    translated_text_uni = translated_text.encode('iso-8859-15').decode('utf-8')
                     return {
                         "input": text,
                         "result": translated_text_uni
