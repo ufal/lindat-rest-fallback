@@ -53,7 +53,7 @@ class cesilko(plugin):
                     print translated_text_uni + '\n'
                     return {
                         "input": text,
-                        "result": translated_text
+                        "result": translated_text_uni
                     }
             else:
                 return self._failed( detail="retcode:%d, exists(%s)=%s, stdout=%s, stderr=%s, cmd=%s" % (retcode,  expected_output_file_name, output_exists, stdout, stderr, cmd) )
