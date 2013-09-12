@@ -70,7 +70,7 @@ class cesilko(plugin):
         """
         import tempfile
         tempfile_fid = tempfile.NamedTemporaryFile(
-            suffix=".cesilko.input", dir=cesilko.temp_dir, delete=False)
+            suffix=".cesilko.input", dir=cesilko.temp_dir, delete=False,  encoding='utf-8')
         tempfile_abs_path = tempfile_fid.name
         dir_file = os.path.split(tempfile_abs_path)
         fname = dir_file[1]
