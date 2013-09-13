@@ -36,7 +36,7 @@ class cesilko(plugin):
         try:
             #(input_f, input_fname_rel) = self._get_temp_file()
 
-            (input_f, input_fname_rel) = self._get_unique_file(enc='iso-8859-1')
+            (input_f, input_fname_rel) = self._get_unique_file(enc='iso-8859-2')
             expected_output_file_name = input_f.name + ".SK.out"
             text = kwargs[cesilko.api_key_data]
 
@@ -49,9 +49,9 @@ class cesilko(plugin):
             retcode, stdout, stderr = utils.run( cmd )
             output_exists = os.path.exists(expected_output_file_name)
             if 0 == retcode and os.path.exists(expected_output_file_name):
-                with codecs.open(expected_output_file_name, 'rb', 'iso-8859-1') as fin:
+                with codecs.open(expected_output_file_name, 'rb', 'iso-8859-2') as fin:
                     translated_text = fin.read()
-                    #translated_text_uni = translated_text.encode('iso-8859-2').decode('utf-8')
+                    translated_text_uni = translated_text.encode('iso-8859-2').decode('utf-8')
                     return {
                         "input": text,
                         "result": translated_text
