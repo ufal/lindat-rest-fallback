@@ -40,7 +40,7 @@ class cesilko(plugin):
             text = kwargs[cesilko.api_key_data]
 
             with input_f as fout:
-                fout.write( text )
+                fout.write( text.encode('iso-8859-2') )
                 print 'Written input data to file ' + fout.name
                 fout.close()
 
