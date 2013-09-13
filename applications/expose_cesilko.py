@@ -62,6 +62,7 @@ class cesilko(plugin):
             return self._failed( detail=utils.uni(e) )
 
         finally:
+
             fout.close()
     #
     #
