@@ -35,6 +35,7 @@ class cesilko(plugin):
 
         try:
             #(input_f, input_fname_rel) = self._get_temp_file()
+
             (input_f, input_fname_rel) = self._get_unique_file(enc='iso-8859-1')
             expected_output_file_name = input_f.name + ".SK.out"
             text = kwargs[cesilko.api_key_data]
