@@ -51,7 +51,6 @@ class cesilko(plugin):
             if 0 == retcode and os.path.exists(expected_output_file_name):
                 with codecs.open(expected_output_file_name, 'rb', 'iso-8859-2') as fin:
                     translated_text = fin.read()
-                    translated_text_uni = translated_text.encode('iso-8859-2').decode('utf-8')
                     return {
                         "input": text,
                         "result": translated_text
