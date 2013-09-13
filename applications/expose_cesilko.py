@@ -2,10 +2,10 @@
 # See main file for licence
 """ One plugin. """
 import codecs
+import os
 
 from applications import plugin
 import utils
-import os
 
 
 class cesilko(plugin):
@@ -34,7 +34,8 @@ class cesilko(plugin):
             return self._failed( detail="missing data parameter" )
 
         try:
-            (input_f, input_fname_rel) = self._get_temp_file()
+            #(input_f, input_fname_rel) = self._get_temp_file()
+            (input_f, input_fname_rel) = self._get_unique_file(enc='iso-8859-2')
             expected_output_file_name = input_f.name + ".SK.out"
             text = kwargs[cesilko.api_key_data]
 
@@ -47,9 +48,9 @@ class cesilko(plugin):
             retcode, stdout, stderr = utils.run( cmd )
             output_exists = os.path.exists(expected_output_file_name)
             if 0 == retcode and os.path.exists(expected_output_file_name):
-                with codecs.open(expected_output_file_name, 'rb', 'utf-8') as fin:
+                with codecs.open(expected_output_file_name, 'rb', 'iso-8859-2') as fin:
                     translated_text = fin.read()
-                    translated_text_uni = translated_text.decode('utf-8')
+                    translated_text_uni = translated_text.encode('iso-8859-2').decode('utf-8')
                     return {
                         "input": text,
                         "result": translated_text_uni
@@ -74,6 +75,18 @@ class cesilko(plugin):
         dir_file = os.path.split(tempfile_abs_path)
         fname = dir_file[1]
         return (tempfile_fid, fname)
+
+    def _get_unique_file(self, enc):
+        """
+            Returns file handle to a unique file
+        """
+        import uuid
+        uniq_id = str(uuid.uuid4())
+        tempfile_name_abs = cesilko.temp_dir + '/' + uniq_id + 'cesilko.input'
+        tempfile_name_rel = uniq_id + 'cesilko.input'
+        tempfile_fid = codecs.open(tempfile_name_abs,'w', encoding=enc)
+        return (tempfile_fid, tempfile_name_rel)
+
 
     def _failed(self, **kwargs):
         """
