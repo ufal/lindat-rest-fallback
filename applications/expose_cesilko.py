@@ -40,9 +40,8 @@ class cesilko(plugin):
             text = kwargs[cesilko.api_key_data]
 
             with input_f as fout:
-                fout.write( text.decode('utf-8').encode('iso-8859-2') )
+                fout.write( utils.uni(text).encode('iso-8859-2') )
                 print 'Written input data to file ' + fout.name
-                fout.close()
 
             cmd = "%s %s" % (cesilko.tr_script, input_fname_rel)
             self.log( "Cesilko ran: [%s]", cmd )
@@ -62,6 +61,8 @@ class cesilko(plugin):
         except Exception, e:
             return self._failed( detail=utils.uni(e) )
 
+        finally:
+            fout.close()
     #
     #
 
