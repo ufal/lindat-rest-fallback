@@ -22,7 +22,7 @@ class cesilko(plugin):
     def version(self):
         """ Cesilko version """
         # TODO should be retrieved from cesilko itself
-        return { "version": "todo version" }
+        return { "version": "v1.0" }
 
     def execute(self, *args, **kwargs):
         """
