@@ -35,11 +35,12 @@ class cesilko(plugin):
 
         try:
             #(input_f, input_fname_rel) = self._get_temp_file()
-
             (input_f, input_fname_rel) = self._get_unique_file(enc='iso-8859-2')
             expected_output_file_name = input_f.name + ".SK.out"
             text = kwargs[cesilko.api_key_data]
-
+            print "original text: "
+            print "---------------"
+            print text
             with input_f as fout:
                 fout.write( text )
                 print 'Written input data to file ' + fout.name
