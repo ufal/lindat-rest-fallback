@@ -6,6 +6,7 @@
   Main entry point.
 """
 
+import os
 import sys
 import logging
 import getopt
@@ -13,11 +14,17 @@ import time
 
 from settings import settings as settings_inst
 import utils
+
+
+# set the working directory to the top-level directory
+os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])))
+
 # initialise logging
 utils.initialize_logging( settings_inst["logger_config"] )
 logger = logging.getLogger( 'common' )
-
+logger.info(u"Setting the working directory to: " + os.path.dirname(os.path.abspath(sys.argv[0])))
 settings_project_inst = None
+
 try:
     #noinspection PyUnresolvedReferences
     from project_settings import settings as settings_project_inst
@@ -117,7 +124,6 @@ def load_project_settings(env):
 
 if __name__ == "__main__":
     lasted = time.time()
-
     logger.info( u"Starting at " + utils.host_info() )
     check_system(settings_inst)
     load_project_settings(settings_inst)
