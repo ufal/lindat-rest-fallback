@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # coding=utf-8
 # This work is licensed!
 # pylint: disable=W0702,R0201,C0111,W0613,R0914
