@@ -1,9 +1,9 @@
 #!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          pyrest
-# Required-Start:    
-# Required-Stop:     
+# Provides:          main.py
+# Required-Start:    $local_fs
+# Required-Stop:     $local_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: This is python REST server
@@ -18,19 +18,20 @@ export PATH="/sbin:$PATH"
 . /lib/lsb/init-functions
 
 # Process name ( For display )
-NAME=pyrest
+NAME="UFAL REST Server"
 
 # Daemon name and its arguments
 
 # The RESTDIR variable must point to the 
 # absolute path where the repository is cloned
-RESTDIR=/home/ramasamy/lindat/lindat-services/
+# and the main.py is stored.
+REST_DIR=/home/ramasamy/lindat/lindat-services/
 
-DAEMON=/usr/bin/python
-DAEMON_ARGS=$RESTDIR/main.py
+DAEMON=${REST_DIR}/main.py
+DAEMON_ARGS=""
 
 # pid file for the daemon
-PIDFILE=/home/ramasamy/pyrest.pid
+PIDFILE=${REST_DIR}/_scripts/pyrest.pid
 
 # If the daemon is not there, then exit.
 test -x $DAEMON || exit 5
@@ -49,7 +50,7 @@ case $1 in
         log_daemon_msg "Starting the process" "$NAME"
         # Start the daemon with the help of start-stop-daemon
         # Log the message appropriately
-        if start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE  --make-pidfile  --exec $DAEMON $DAEMON_ARGS; then
+        if start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE  --make-pidfile --background  --exec $DAEMON $DAEMON_ARGS; then
             log_end_msg 0
         else
             log_end_msg 1
@@ -88,7 +89,7 @@ case $1 in
             start-stop-daemon --stop --signal USR1 --quiet --pidfile $PIDFILE --name $NAME
             log_success_msg "$NAME process reloaded successfully"
         else
-            log_failure_msg "$PIDFILE does not exists"
+            log_failure_msg "$PIDFILE does not exist"
         fi
         ;;
     *)
