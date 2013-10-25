@@ -26,8 +26,8 @@ NAME="UFAL REST Server"
 # absolute path where the repository is cloned
 # and the main.py is stored.
 REST_DIR=/home/ramasamy/lindat/lindat-services/
-
-DAEMON=${REST_DIR}/main.py
+export PYREST_USER="ramasamy"
+DAEMON="su --login ${PYREST_USER} -c ${REST_DIR}/pyrest"
 DAEMON_ARGS=""
 
 # pid file for the daemon
@@ -61,7 +61,7 @@ case $1 in
         if [ -e $PIDFILE ]; then
             status_of_proc -p $PIDFILE $DAEMON "Stoppping the $NAME process" && status="0" || status="$?"
             if [ "$status" = 0 ]; then
-                start-stop-daemon --stop  --oknodo --pidfile $PIDFILE
+                start-stop-daemon --stop  --oknodo --pidfile $PIDFILE 
                 /bin/rm -rf $PIDFILE
             fi
         else
