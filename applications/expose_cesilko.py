@@ -42,6 +42,7 @@ class cesilko(plugin):
             print "---------------"
             print text
             with input_f as fout:
+                #text_in_iso = unicode(text, errors="ignore").encode('iso-8859-2')
                 fout.write( text )
                 print 'Written input data to file ' + fout.name
 
