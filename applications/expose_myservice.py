@@ -28,8 +28,8 @@ class myservice(plugin):
             Execute the application.
         """
         if myservice.api_myapi1 in args:	  
-	  input_data = kwargs[myservice.api_myapi1_param1]
-	  return {
+            input_data = kwargs[myservice.api_myapi1_param1]
+            return {
                         "input": input_data,
                         "result": "this is an example"
-	  }
+            }
