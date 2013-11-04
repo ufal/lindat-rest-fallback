@@ -53,13 +53,16 @@ class cesilko(plugin):
             if 0 == retcode and os.path.exists(expected_output_file_name):
                 with open(expected_output_file_name, 'rb') as fin:
                     translated_text = fin.read()
-                    #translated_text_dec_iso = translated_text.decode('iso-8859-2')
-                    print 'output text'
+                    translated_text_dec_iso = translated_text.decode('iso-8859-2')
+                    print 'output text : original '
                     print '-----------'
                     print translated_text
+                    print 'output text decoded '
+                    print '-----------'
+                    print translated_text_dec_iso
                     return {
                         "input": text,
-                        "result": translated_text
+                        "result": translated_text_dec_iso
                     }
             else:
                 return self._failed( detail="retcode:%d, exists(%s)=%s, stdout=%s, stderr=%s, cmd=%s" % (retcode,  expected_output_file_name, output_exists, stdout, stderr, cmd) )
