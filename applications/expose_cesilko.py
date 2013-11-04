@@ -38,8 +38,8 @@ class cesilko(plugin):
             (input_f, input_fname_rel) = self._get_unique_file(enc='iso-8859-2')
             expected_output_file_name = input_f.name + ".SK.out"
             text = kwargs[cesilko.api_key_data]
-            print "original text: "
-            print "---------------"
+            print "original input text: "
+            print "--------------------"
             print text
             with input_f as fout:
                 #text_in_iso = unicode(text, errors="ignore").encode('iso-8859-2')
@@ -51,8 +51,12 @@ class cesilko(plugin):
             retcode, stdout, stderr = utils.run( cmd )
             output_exists = os.path.exists(expected_output_file_name)
             if 0 == retcode and os.path.exists(expected_output_file_name):
-                with codecs.open(expected_output_file_name, 'rb', 'iso-8859-2') as fin:
+                with open(expected_output_file_name, 'rb') as fin:
                     translated_text = fin.read()
+                    #translated_text_dec_iso = translated_text.decode('iso-8859-2')
+                    print 'output text'
+                    print '-----------'
+                    print translated_text
                     return {
                         "input": text,
                         "result": translated_text
