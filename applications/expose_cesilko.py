@@ -37,15 +37,19 @@ class cesilko(plugin):
             #(input_f, input_fname_rel) = self._get_temp_file()
             (input_f, input_fname_rel) = self._get_unique_file(enc='iso-8859-2')
             expected_output_file_name = input_f.name + ".SK.out"
+            # 1. Input text is in UTF-8
             text = kwargs[cesilko.api_key_data]
-            print "original input text: "
-            print "--------------------"
-            print text
+            self.log("Received Input Text: %s ", text)
+            self.log("Type of the Input: %s",  str(type(text)))
+            # 2. Convert the text into ISO-8859-2 encoding.
+            #    - non ISO-8859-2 characters will be replaced with XML numeric codes
+            text_iso = text.encode('iso-8859-2', 'xmlcharrefreplace')
+            text_iso_dec = text_iso.decode('iso-8859-2')
+            self.log("Replacing the Non ISO-8859-2 Characters Into XML Numeric Entities: %s", text_iso_dec)
             with input_f as fout:
                 #text_in_iso = unicode(text, errors="ignore").encode('iso-8859-2')
-                fout.write( text )
-                print 'Written input data to file ' + fout.name
-
+                fout.write( text_iso_dec )
+                self.log("Written Input Text to File: %s", fout.name)
             cmd = "%s %s" % (cesilko.tr_script, input_fname_rel)
             self.log( "Cesilko ran: [%s]", cmd )
             retcode, stdout, stderr = utils.run( cmd )
@@ -53,16 +57,12 @@ class cesilko(plugin):
             if 0 == retcode and os.path.exists(expected_output_file_name):
                 with open(expected_output_file_name, 'rb') as fin:
                     translated_text = fin.read()
-                    translated_text_dec_iso = translated_text.decode('iso-8859-2')
-                    print 'output text : original '
-                    print '-----------'
-                    print translated_text
-                    print 'output text decoded '
-                    print '-----------'
-                    print translated_text_dec_iso
+                    translated_text_dec_utf = translated_text.decode('iso-8859-2').encode('utf-8').decode('utf-8')
+                    self.log("Output From Cesilko: %s ", translated_text)
+                    self.log("The UTF-8 Encoded Output: %s", translated_text_dec_utf)
                     return {
                         "input": text,
-                        "result": translated_text_dec_iso
+                        "result": translated_text_dec_utf
                     }
             else:
                 return self._failed( detail="retcode:%d, exists(%s)=%s, stdout=%s, stderr=%s, cmd=%s" % (retcode,  expected_output_file_name, output_exists, stdout, stderr, cmd) )
