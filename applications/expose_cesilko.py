@@ -12,17 +12,37 @@ class cesilko(plugin):
     """
         Cesilko wrapper
     """
+    # ####################
+    # SOFTWARE INFORMATION
+    # ####################
+    # Fill the information about the plugin. Please do not change the following 
+    # variable names. 
+    # 1. author   - Author name of the software. Use commas to add more authors.
+    # 2. version  - Software version number.
+    # ####################
+    software_author = [u'Jan Hajič', u'Vladislav Kuboň', u'Petr Homola']
+    software_version = u'v1.0'
+
+    # #########################
+    # PLUGIN SPECIFIC VARIABLES
+    # #########################    
     exposed_uri = "/cesilko"
     temp_dir = "/home/cesilko/tmp/"
     tr_script = "/var/www/cgi-bin/cesilko/run.csh"
 
+    # ########################
+    # DEFINE API NAMES
+    # ########################
+    # Avilable APIs:
+    #   1. translate
+    #       data - <UTF-8 encoded string>
+    # ########################
     api_translate = "translate"
     api_key_data = "data"
 
     def version(self):
         """ Cesilko version """
-        # TODO should be retrieved from cesilko itself
-        return { "version": "v1.0" }
+        return { 'version': self.__class__.__dict__['software_version'], 'author': self.__class__.__dict__['software_author'] }
 
     def execute(self, *args, **kwargs):
         """
@@ -34,7 +54,6 @@ class cesilko(plugin):
             return self._failed( detail="missing data parameter" )
 
         try:
-            #(input_f, input_fname_rel) = self._get_temp_file()
             (input_f, input_fname_rel) = self._get_unique_file(enc='iso-8859-2')
             expected_output_file_name = input_f.name + ".SK.out"
             # 1. Input text is in UTF-8
