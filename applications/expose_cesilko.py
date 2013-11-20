@@ -3,6 +3,7 @@
 """ One plugin. """
 import codecs
 import os
+import re
 
 from applications import plugin
 import utils
@@ -84,10 +85,19 @@ class cesilko(plugin):
             if 0 == retcode and os.path.exists(expected_output_file_name):
                 with open(expected_output_file_name, 'rb') as fin:
                     translated_text = fin.read()
+
                     # convert the ISO-8859-2 output text into UTF-8 text
                     translated_text_dec_utf = translated_text.decode('iso-8859-2').encode('utf-8').decode('utf-8')
                     self.log("Output From Cesilko: %s ", translated_text)
                     self.log("The UTF-8 Encoded Output: %s", translated_text_dec_utf)
+                    
+                    # remove extra \n\n at the end of the translated text
+                    # Cesilko adds this, so it can be removed safely here
+                    translated_text_dec_utf = re.sub(r"\n\n$", "", translated_text_dec_utf)
+                    
+                    # remove extra spaces at the beginning and end
+                    translated_text_dec_utf = re.sub(r"(^\s+|\s+$)", "", translated_text_dec_utf)
+                    
                     return {
                         "input": text,
                         "result": translated_text_dec_utf
