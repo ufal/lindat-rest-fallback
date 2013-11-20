@@ -1,0 +1,90 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          pyrest
+# Required-Start:    $local_fs
+# Required-Stop:     
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: This is python REST server
+# Description:       This python REST server offers easy web access to
+#                    various Natural Language Processing (NLP)
+#                    tools available in UFAL.
+### END INIT INFO
+
+export PATH="/sbin:$PATH"
+
+# Using the lsb functions to perform the operations.
+. /lib/lsb/init-functions
+
+# Process name ( For display )
+NAME="UFAL REST Server"
+
+# Daemon name and its arguments
+
+# The RESTDIR variable must point to the 
+# absolute path where the repository is cloned
+# and the main.py is stored.
+REST_DIR=/lindat/rest_server/
+export PYREST_USER="rest"
+DAEMON="${REST_DIR}/pyrest"
+DAEMON_ARGS=""
+
+# pid file for the daemon
+PIDFILE=${REST_DIR}/_scripts/pyrest.pid
+
+# If the daemon is not there, then exit.
+test -x $DAEMON || exit 5
+
+case $1 in
+    start)
+        # Checked the PID file exists and check the actual status of process
+        if [ -e $PIDFILE ]; then
+            status_of_proc -p $PIDFILE $DAEMON "$NAME process" && status="0" || status="$?"
+            # If the status is SUCCESS then don't need to start again.
+            if [ $status = "0" ]; then
+                exit # Exit
+            fi
+        fi
+        # Start the daemon.
+        log_daemon_msg "Starting ${NAME}" "pyrest"
+        # Start the daemon with the help of start-stop-daemon
+        # Log the message appropriately
+        if start-stop-daemon --start  --oknodo  --chuid ${PYREST_USER} --pidfile $PIDFILE  --make-pidfile --background  --exec $DAEMON $DAEMON_ARGS; then
+            log_end_msg 0
+        else
+            log_end_msg 1
+        fi
+        ;;
+    stop)
+        # Stop the daemon.
+        if [ -e $PIDFILE ]; then
+            status_of_proc -p $PIDFILE $DAEMON "Stoppping the $NAME process" && status="0" || status="$?"
+            if [ "$status" = 0 ]; then
+                start-stop-daemon --stop  --oknodo --chuid ${PYREST_USER}  --pidfile $PIDFILE 
+                /bin/rm -rf $PIDFILE
+            fi
+        else
+            log_daemon_msg "$NAME process is not running"
+            log_end_msg 0
+        fi
+        ;;
+    restart)
+        # Restart the daemon.
+        $0 stop && sleep 2 && $0 start
+        ;;
+    status)
+        # Check the status of the process.
+        if [ -e $PIDFILE ]; then
+            status_of_proc -p $PIDFILE $DAEMON "$NAME process" && exit 0 || exit $?
+        else
+            log_daemon_msg "$NAME Process is not running"
+            log_end_msg 0
+        fi
+        ;;
+    *)
+        # For invalid arguments, print the usage message.
+        echo "Usage: $0 {start|stop|restart|status}"
+        exit 2
+        ;;
+esac
