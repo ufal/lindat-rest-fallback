@@ -78,7 +78,7 @@ class cesilko(plugin):
             with input_f as fout:
                 fout.write( text_iso_dec )
                 self.log("Written Input Text to File: %s", fout.name)
-            cmd = "%s %s" % (cesilko.tr_script, input_fname_rel)
+            cmd = "%s %s %s" % (cesilko.tr_script, input_f.name, expected_output_file_name)
             self.log( "Cesilko ran: [%s]", cmd )
             retcode, stdout, stderr = utils.run( cmd )
             output_exists = os.path.exists(expected_output_file_name)
