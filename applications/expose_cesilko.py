@@ -29,8 +29,8 @@ class cesilko(plugin):
     # PLUGIN SPECIFIC VARIABLES
     # #########################    
     exposed_uri = "/cesilko"
-    temp_dir = "/lindat/ufal_apps/cesilko/cesilko/work/"
-    tr_script = "/lindat/ufal_apps/cesilko/cesilko/run.sh"
+    temp_dir = "/lindat/ufal_apps/cesilko/work/"
+    tr_script = "/lindat/ufal_apps/cesilko/run.csh"
     ###########################
 
     # #########################
