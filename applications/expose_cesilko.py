@@ -87,7 +87,8 @@ class cesilko(plugin):
                     translated_text = fin.read()
 
                     # convert the ISO-8859-2 output text into UTF-8 text
-                    translated_text_dec_utf = translated_text.decode('iso-8859-2').encode('utf-8').decode('utf-8')
+                    #translated_text_dec_utf = translated_text.decode('iso-8859-2').encode('utf-8').decode('utf-8')
+                    translated_text_dec_utf = translated_text.decode('iso-8859-2')
                     self.log("Output From Cesilko: %s ", translated_text)
                     self.log("The UTF-8 Encoded Output: %s", translated_text_dec_utf)
                     
