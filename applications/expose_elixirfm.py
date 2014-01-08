@@ -24,11 +24,19 @@ class elixirfm(plugin):
     software_version = u'v1.0'
 
 
+    # http://host:port/elixirfm
     exposed_uri = "/elixirfm"
 
-    # myservice apis
+    # elixirfm apis
+    
+    # API:  "myapi"
+    # required params: "param1"
+    # uri:  http://host:port/elixirfm/myapi1?param1='your input'
     api_myapi1 = "myapi1"
     api_myapi1_param1 = "param1"
+
+    # API: "version"
+    # uri:  http://host:port/elixirfm/version
 
     def version(self):
         """ ElixirFM version """
