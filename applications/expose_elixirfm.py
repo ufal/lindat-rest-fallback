@@ -8,9 +8,9 @@ from applications import plugin
 import utils
 
 
-class elixir(plugin):
+class elixirfm(plugin):
     """
-       elixir
+       elixirfm
     """
     # #######################
     # SOFTWARE INFORMATION
@@ -24,22 +24,22 @@ class elixir(plugin):
     software_version = u'v1.0'
 
 
-    exposed_uri = "/elixir"
+    exposed_uri = "/elixirfm"
 
     # myservice apis
-    api_myapi1 = "myapi"
-    api_myapi1_param1 = "list"
+    api_myapi1 = "myapi1"
+    api_myapi1_param1 = "param1"
 
     def version(self):
-        """ Cesilko version """
+        """ ElixirFM version """
         return { 'version': self.__class__.__dict__['software_version'], 'author': self.__class__.__dict__['software_author'] }
 
     def execute(self, *args, **kwargs):
         """
             Execute the application.
         """
-        if myservice.api_myapi1 in args:	  
-            input_data = kwargs[myservice.api_myapi1_param1]
+        if elixirfm.api_myapi1 in args:	  
+            input_data = kwargs[elixirfm.api_myapi1_param1]
             return {
                         "input": input_data,
                         "result": "this is an example"
