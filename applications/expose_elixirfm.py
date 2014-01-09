@@ -67,13 +67,13 @@ class elixirfm(plugin):
         # API: lookup        
         if elixirfm.api_lookup in args:	  
             input_data = kwargs[elixirfm.api_lookup_p1]
-            cmd = "echo '%s' | %s lookup" % (elixirfm.api_lookup_p1, elixirfm.elixir_exe)
+            cmd = "echo '%s' | %s lookup" % (input_data, elixirfm.elixir_exe)
             retcode, stdout, stderr = utils.run(cmd)
             self.log("ElixirFM ran: [%s]", cmd)
             if 0 == retcode:
                 return {
                     "api": elixirfm.api_lookup,
-                    "param1": input_data,
+                    "data": input_data,
                     "output": stdout
                 }
             else:
