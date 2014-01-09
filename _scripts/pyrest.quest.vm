@@ -31,7 +31,7 @@ DAEMON="${REST_DIR}/pyrest"
 DAEMON_ARGS=""
 
 # pid file for the daemon
-PIDFILE=${REST_DIR}/_scripts/pyrest.pid
+PIDFILE=/var/run/pyrest.pid
 
 # If the daemon is not there, then exit.
 test -x $DAEMON || exit 5
