@@ -23,20 +23,37 @@ class elixirfm(plugin):
     software_author = [u'Otakar Smrž']
     software_version = u'v1.0'
 
+    # #######################
+    # SOFTWARE EXECUTABLES
+    # #######################
+    elixir_exe = '/home/smrz/.cabal/bin/elixir'
+
+    # #######################
+    # BASE URI
+    # #######################
 
     # http://host:port/elixirfm
     exposed_uri = "/elixirfm"
 
-    # elixirfm apis
-    
-    # API:  "myapi"
-    # required params: "param1"
-    # uri:  http://host:port/elixirfm/myapi1?param1='your input'
-    api_myapi1 = "myapi1"
-    api_myapi1_param1 = "param1"
+    # #######################
+    # DEFINE API NAMES
+    # #######################
+    # 1. lookup
+    #       "data" - <UTF-8 encoded string> 
+    # 2. derive
+    # 3. inflect
+    # 4. resolve
 
-    # API: "version"
-    # uri:  http://host:port/elixirfm/version
+    # URI :  http://host:port/elixirfm/lookup?data='your input'
+    api_lookup = "lookup"
+    api_lookup_p1 = "data"
+
+    # #######################
+    # DEFAULT APIs
+    # #######################
+    # 1. version
+    #       uri:  http://host:port/elixirfm/version
+
 
     def version(self):
         """ ElixirFM version """
@@ -46,9 +63,19 @@ class elixirfm(plugin):
         """
             Execute the application.
         """
-        if elixirfm.api_myapi1 in args:	  
-            input_data = kwargs[elixirfm.api_myapi1_param1]
-            return {
-                        "input": input_data,
-                        "result": "this is an example"
-            }
+
+        # API: lookup        
+        if elixirfm.api_lookup in args:	  
+            input_data = kwargs[elixirfm.api_lookup_p1]
+            cmd = "echo '%s' | %s lookup" % (elixirfm.api_lookup_p1, elixirfm.elixir_exe)
+            retcode, stdout, stderr = utils.run(cmd)
+            self.log("ElixirFM ran: [%s]", cmd)
+            if 0 == retcode:
+                return {
+                    "api": elixirfm.api_lookup,
+                    "param1": input_data,
+                    "output": stdout
+                }
+            else:
+                return self._failed( detail="retcode:%d, stdout=%s, stderr=%s, cmd=%s" % (retcode,  stdout, stderr, cmd) )
+    
