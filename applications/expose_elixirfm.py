@@ -45,7 +45,7 @@ class elixirfm(plugin):
     # 4. resolve
 
     # Shell cmd : echo "something" | elixir lookup 
-    # URI :  http://host:port/elixirfm/lookup?data='something'
+    # URI :  http://host:port/elixirfm/lookup?data=something
     api_lookup = "lookup"
     api_lookup_p1 = "data"
 
