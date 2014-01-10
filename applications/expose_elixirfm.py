@@ -134,3 +134,19 @@ class elixirfm(plugin):
                 }
             else:
                 return self._failed( detail="retcode:%d, stdout=%s, stderr=%s, cmd=%s" % (retcode,  stdout, stderr, cmd) )
+        # API : resolve 
+        if elixirfm.api_resolve in args:
+            input_data = kwargs[elixirfm.api_resolve_p1]
+            q1 = kwargs[elixirfm.api_resolve_p2]
+            cmd = "echo '%s' | %s resolve %s " % (input_data, elixirfm.elixir_exe, q1)
+            retcode, stdout, stderr = utils.run(cmd)
+            self.log("ElixirFM ran: [%s]", cmd)
+            if 0 == retcode:
+                return {
+                    "api": elixirfm.api_resolve,
+                    "data": input_data,
+                    "q1": q1,
+                    "output": stdout
+                }
+            else:
+                return self._failed( detail="retcode:%d, stdout=%s, stderr=%s, cmd=%s" % (retcode,  stdout, stderr, cmd) )
