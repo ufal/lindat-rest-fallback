@@ -7,6 +7,7 @@ import os
 from applications import plugin
 import utils
 
+import elixir
 
 class elixirfm(plugin):
     """
@@ -95,7 +96,7 @@ class elixirfm(plugin):
                 return {
                     "api": elixirfm.api_lookup,
                     "data": input_data,
-                    "output": stdout
+                    "output": elixir.unpretty(stdout, "lookup")
                 }
             else:
                 return self._failed( detail="retcode:%d, stdout=%s, stderr=%s, cmd=%s" % (retcode,  stdout, stderr, cmd) )
@@ -113,7 +114,7 @@ class elixirfm(plugin):
                     "data": input_data,
                     "q1": q1,
                     "q2": q2,
-                    "output": stdout
+                    "output": elixir.unpretty(stdout, "derive")
                 }
             else:
                 return self._failed( detail="retcode:%d, stdout=%s, stderr=%s, cmd=%s" % (retcode,  stdout, stderr, cmd) )
@@ -130,7 +131,7 @@ class elixirfm(plugin):
                     "api": elixirfm.api_inflect,
                     "data": input_data,
                     "q1": q1,
-                    "output": stdout
+                    "output": elixir.unpretty(stdout, "inflect")
                 }
             else:
                 return self._failed( detail="retcode:%d, stdout=%s, stderr=%s, cmd=%s" % (retcode,  stdout, stderr, cmd) )
@@ -146,7 +147,7 @@ class elixirfm(plugin):
                     "api": elixirfm.api_resolve,
                     "data": input_data,
                     "q1": q1,
-                    "output": stdout
+                    "output": elixir.unpretty(stdout, "resolve")
                 }
             else:
                 return self._failed( detail="retcode:%d, stdout=%s, stderr=%s, cmd=%s" % (retcode,  stdout, stderr, cmd) )
