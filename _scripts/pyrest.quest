@@ -25,8 +25,8 @@ NAME="UFAL REST Server"
 # The RESTDIR variable must point to the 
 # absolute path where the repository is cloned
 # and the main.py is stored.
-REST_DIR=/home/ramasamy/lindat/lindat-services/
-export PYREST_USER="ramasamy"
+REST_DIR=/home/smrz/clarin-lindat/lindat-services/
+export PYREST_USER="smrz"
 DAEMON="${REST_DIR}/pyrest"
 DAEMON_ARGS=""
 
