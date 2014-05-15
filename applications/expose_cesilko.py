@@ -55,7 +55,15 @@ class cesilko(plugin):
         if not cesilko.api_translate in args:
             return self._failed( detail="Invalid API - no method with such a name" )
         if 0 == len(kwargs.get(cesilko.api_key_data, "")):
-            return self._failed( detail="missing data parameter" )
+            found_post = False
+            try:
+                kwargs[cesilko.api_key_data] = utils.uni(self.posted_body())
+                self.log( "using fallback mechanism" )
+                found_post = True
+            except Exception, e:
+                pass
+            if not found_post:
+                return self._failed( detail="missing data parameter" )
 
         try:
             (input_f, input_fname_rel) = self._get_unique_file(enc='iso-8859-2')
@@ -108,9 +116,6 @@ class cesilko(plugin):
 
         except Exception, e:
             return self._failed( detail=utils.uni(e) )
-
-        finally:
-            fout.close()
 
     def _get_temp_file(self):
         """

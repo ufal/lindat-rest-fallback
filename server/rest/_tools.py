@@ -245,7 +245,10 @@ def _log_request():
         Log requests.
     """
     req = cherrypy.request
-    _logger.info(u"Processing: %s(%s) requested %s ", req.remote.ip, req.remote.name, req.request_line)
+    _logger.info(u"Processing: %s(%s) requested %s, query string [%s], X-Forwarded-For [%s], "
+        "headers [%s], body params [%s]", 
+        req.remote.ip, req.remote.name, req.request_line, req.query_string, req.headers.get("X-Forwarded-For", "None"),
+        req.headers, req.body_params)
 
 
 #

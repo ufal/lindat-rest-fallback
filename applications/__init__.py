@@ -82,6 +82,17 @@ class plugin:
         """ Log msg """
         _logger.info( msg, *args ) 
 
+    def posted_body(self):
+        """ Return posted body. """
+        try:
+            cl = cherrypy.request.headers['Content-Length']
+            return cherrypy.request.body.read(int(cl))
+        except:
+            pass
+        return None
+
+        
+
 # automatic loading
 #
 
