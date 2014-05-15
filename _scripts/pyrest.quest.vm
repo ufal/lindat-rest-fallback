@@ -25,10 +25,10 @@ NAME="UFAL REST Server"
 # The RESTDIR variable must point to the 
 # absolute path where the repository is cloned
 # and the main.py is stored.
-REST_DIR=/lindat/rest_server/
-export PYREST_USER="www-data"
-DAEMON="${REST_DIR}/pyrest"
-DAEMON_ARGS=""
+REST_DIR=/lindat/rest_server
+export PYREST_USER="rest"
+DAEMON="/usr/bin/python"
+DAEMON_ARGS="${REST_DIR}/main.py"
 
 # pid file for the daemon
 PIDFILE=/var/run/pyrest.pid

@@ -57,11 +57,15 @@ class cesilko(plugin):
         """
             Execute the application.
         """
+        ret_mime = None
+
+        #self.log( "args [%s], kwargs [%s]", repr(args), repr(kwargs))
         if not cesilko.api_translate in args:
             return self._failed( detail="Invalid API - no method with such a name" )
 
         # posted raw body
-        if cesilko.api_key_body in args:
+        if cesilko.api_key_body in kwargs:
+            ret_mime = "text/plain"
             try:
                 kwargs[cesilko.api_key_data] = utils.uni(self.posted_body())
             except:
@@ -72,6 +76,7 @@ class cesilko(plugin):
             # hardcoded fallback
             try:
                 kwargs[cesilko.api_key_data] = utils.uni(self.posted_body())
+                ret_mime = "text/plain"
                 self.log( "using fallback mechanism" )
             except:
                 return self._failed( detail="missing data parameter" )
@@ -109,8 +114,6 @@ class cesilko(plugin):
                     # convert the ISO-8859-2 output text into UTF-8 text
                     #translated_text_dec_utf = translated_text.decode('iso-8859-2').encode('utf-8').decode('utf-8')
                     translated_text_dec_utf = translated_text.decode('iso-8859-2')
-                    self.log("Output From Cesilko: %s ", translated_text)
-                    self.log("The UTF-8 Encoded Output: %s", translated_text_dec_utf)
                     
                     # remove extra \n\n at the end of the translated text
                     # Cesilko adds this, so it can be removed safely here
@@ -119,13 +122,15 @@ class cesilko(plugin):
                     # remove extra spaces at the beginning and end
                     translated_text_dec_utf = re.sub(r"(^\s+|\s+$)", "", translated_text_dec_utf)
 
+                    self.log("The UTF-8 Encoded Output: %s", translated_text_dec_utf)
+
                     ret = {
                         "input": text,
                         "result": translated_text_dec_utf
                     }
                     # special for weblicht
-                    if cesilko.api_key_body in args:
-                        return "text/plain", ret["result"]
+                    if ret_mime is not None:
+                        return ret_mime, ret["result"]
 
                     return ret
             else:

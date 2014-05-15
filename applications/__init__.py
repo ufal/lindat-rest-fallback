@@ -5,6 +5,7 @@
 import os
 import server
 import cherrypy
+import json
 import logging
 _logger = logging.getLogger("applications")
 
@@ -58,13 +59,13 @@ class plugin:
             ret = self.version()
         else:
             ret = self.handle(*args, **kwargs)
-        return plugin.set_mime(ret)
+        return self.set_mime(ret)
 
     def POST(self, *args, **kwargs):
         """
             HTTP POST request.
         """
-        return plugin.set_mime(self.handle(*args, **kwargs))
+        return self.set_mime(self.handle(*args, **kwargs))
 
     def handle(self, *args, **kwargs):
         """
@@ -98,17 +99,15 @@ class plugin:
 
     @staticmethod
     def set_mime(obj_mime):
-        if not isinstance(mime, (list, tuple)):
-            return plugin.jsonify(obj)
+        if not isinstance(obj_mime, (list, tuple)):
+            return plugin.jsonify(obj_mime)
         cherrypy.response.headers['Content-Type'] = obj_mime[0]
         return obj_mime[1]
 
     @staticmethod
-    @cherrypy.tools.json_out()
     def jsonify(d):
-        return d
-
-
+        cherrypy.serving.response.headers['Content-Type'] = "application/json"
+        return json.dumps(d, indent=2)
         
 
 # automatic loading
