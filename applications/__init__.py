@@ -8,6 +8,7 @@ import cherrypy
 import logging
 _logger = logging.getLogger("applications")
 
+
 # noinspection PyMissingConstructor,PyDocstring
 class _plugin_meta(type):
     """
@@ -42,24 +43,28 @@ class plugin:
     # default handlers
     #
 
-    @cherrypy.tools.json_out()
     def GET(self, *args, **kwargs):
         """
             HTTP GET request.
 
             Common API
                 - version
-        """
-        if server.api_version in args:
-            return self.version()
-        return self.handle(*args, **kwargs)
 
-    @cherrypy.tools.json_out()
+            Note:
+                Mime can be set when returning a tuple ["mime type", ret obj]
+        """
+        ret = None
+        if server.api_version in args:
+            ret = self.version()
+        else:
+            ret = self.handle(*args, **kwargs)
+        return plugin.set_mime(ret)
+
     def POST(self, *args, **kwargs):
         """
             HTTP POST request.
         """
-        return self.handle(*args, **kwargs)
+        return plugin.set_mime(self.handle(*args, **kwargs))
 
     def handle(self, *args, **kwargs):
         """
@@ -83,13 +88,26 @@ class plugin:
         _logger.info( msg, *args ) 
 
     def posted_body(self):
-        """ Return posted body. """
+        """ Return raw posted body. """
         try:
             cl = cherrypy.request.headers['Content-Length']
             return cherrypy.request.body.read(int(cl))
         except:
             pass
         return None
+
+    @staticmethod
+    def set_mime(obj_mime):
+        if not isinstance(mime, (list, tuple)):
+            return plugin.jsonify(obj)
+        cherrypy.response.headers['Content-Type'] = obj_mime[0]
+        return obj_mime[1]
+
+    @staticmethod
+    @cherrypy.tools.json_out()
+    def jsonify(d):
+        return d
+
 
         
 

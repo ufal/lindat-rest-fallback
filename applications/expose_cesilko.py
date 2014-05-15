@@ -9,6 +9,7 @@ from applications import plugin
 import utils
 
 
+# noinspection PyBroadException
 class cesilko(plugin):
     """
         Cesilko wrapper
@@ -42,11 +43,15 @@ class cesilko(plugin):
     # #########################
     api_translate = "translate"
     api_key_data = "data"
+    api_key_body = "body"
     ###########################
 
     def version(self):
         """ Cesilko version """
-        return { 'version': self.__class__.__dict__['software_version'], 'author': self.__class__.__dict__['software_author'] }
+        return {
+            'version': cesilko.software_version,
+            'author': cesilko.software_author
+        }
 
     def execute(self, *args, **kwargs):
         """
@@ -54,15 +59,21 @@ class cesilko(plugin):
         """
         if not cesilko.api_translate in args:
             return self._failed( detail="Invalid API - no method with such a name" )
-        if 0 == len(kwargs.get(cesilko.api_key_data, "")):
-            found_post = False
+
+        # posted raw body
+        if cesilko.api_key_body in args:
+            try:
+                kwargs[cesilko.api_key_data] = utils.uni(self.posted_body())
+            except:
+                return self._failed( detail="invalid posted body" )
+
+        # what should we translate?
+        elif 0 == len(kwargs.get(cesilko.api_key_data, "")):
+            # hardcoded fallback
             try:
                 kwargs[cesilko.api_key_data] = utils.uni(self.posted_body())
                 self.log( "using fallback mechanism" )
-                found_post = True
-            except Exception, e:
-                pass
-            if not found_post:
+            except:
                 return self._failed( detail="missing data parameter" )
 
         try:
@@ -72,13 +83,14 @@ class cesilko(plugin):
             # 1. Input text is in UTF-8
             text = kwargs[cesilko.api_key_data]
             self.log("Received Input Text: %s ", text)
-            self.log("Type of the Input: %s",  str(type(text)))
+            self.log("Type of the Input: %s", str(type(text)))
 
             # 2. Convert the UTF-8 encoded text into ISO-8859-2 encoding.
             #    - non ISO-8859-2 characters will be replaced with XML numeric codes
+            text_iso_dec = None
             try:
                 text_iso = text.encode('iso-8859-2', 'xmlcharrefreplace')
-                text_iso_dec = text_iso.decode('iso-8859-2') # ISO-8859-2 text
+                text_iso_dec = text_iso.decode('iso-8859-2')  # ISO-8859-2 text
                 self.log("Replacing the Non ISO-8859-2 Characters Into XML Numeric Entities: %s", text_iso_dec)
             except UnicodeEncodeError:
                 self._failed( detail="please supply utf-8 input." )
@@ -106,13 +118,19 @@ class cesilko(plugin):
                     
                     # remove extra spaces at the beginning and end
                     translated_text_dec_utf = re.sub(r"(^\s+|\s+$)", "", translated_text_dec_utf)
-                    
-                    return {
+
+                    ret = {
                         "input": text,
                         "result": translated_text_dec_utf
                     }
+                    # special for weblicht
+                    if cesilko.api_key_body in args:
+                        return "text/plain", ret["result"]
+
+                    return ret
             else:
-                return self._failed( detail="retcode:%d, exists(%s)=%s, stdout=%s, stderr=%s, cmd=%s" % (retcode,  expected_output_file_name, output_exists, stdout, stderr, cmd) )
+                return self._failed( detail="retcode:%d, exists(%s)=%s, stdout=%s, stderr=%s, cmd=%s" % (
+                    retcode, expected_output_file_name, output_exists, stdout, stderr, cmd) )
 
         except Exception, e:
             return self._failed( detail=utils.uni(e) )
@@ -139,7 +157,6 @@ class cesilko(plugin):
         tempfile_name_rel = uniq_id + 'cesilko.input'
         tempfile_fid = codecs.open(tempfile_name_abs,'w', encoding=enc)
         return (tempfile_fid, tempfile_name_rel)
-
 
     def _failed(self, **kwargs):
         """
